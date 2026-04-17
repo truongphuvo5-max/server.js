@@ -44,21 +44,4 @@ app.post("/chat", async (req, res) => {
   }
 });
 
-    const data = await response.json();
-
-    if (!data.choices) {
-      return res.json({
-        reply: "Lỗi API: " + JSON.stringify(data)
-      });
-    }
-
-    res.json({
-      reply: data.choices[0].message.content
-    });
-
-  } catch (err) {
-    res.json({ reply: "Server lỗi 😢" });
-  }
-});
-
 app.listen(3000);
