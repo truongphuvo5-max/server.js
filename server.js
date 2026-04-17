@@ -8,7 +8,14 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("API chạy OK 🚀");
 });
+app.get("/chat", async (req, res) => {
+  const msg = req.query.msg;
 
+  const response = await fetch("https://api.popcat.xyz/chatbot?msg=" + encodeURIComponent(msg));
+  const data = await response.json();
+
+  res.send(data.response);
+});
 app.post("/chat", async (req, res) => {
   const msg = req.body.message;
 
