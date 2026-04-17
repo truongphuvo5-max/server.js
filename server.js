@@ -14,19 +14,35 @@ app.post("/chat", async (req, res) => {
   try {
     const msg = req.body.message;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + process.env.OPENAI_API_KEY,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          { role: "user", content: msg }
-        ]
-      })
-    });
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + process.env.GEMINI_API_KEY,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [{ text: msg }]
+            }
+          ]
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    const reply =
+      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "AI không trả lời 😢";
+
+    res.json({ reply });
+
+  } catch (err) {
+    res.json({ reply: "Server lỗi 😢" });
+  }
+});
 
     const data = await response.json();
 
